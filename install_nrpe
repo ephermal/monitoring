@@ -1,0 +1,33 @@
+useradd nagios
+passwd nagios
+
+cd /root/nagios
+
+tar -xvf nagios-plugins-1.4.16-1.el6.rf.x86_64.rpm
+
+ll
+
+cd nagios-plugins-1.4.16-1.el6.rf.x86_64
+./configure
+make
+make install
+
+chown nagios.nagios /usr/local/nagios
+chown -R nagios.nagios /usr/local/nagios/libexec
+
+rpm -i xinetd
+
+cd /root/nagios
+tar xvf nagios-nrpe-2.14-1.el6.rf.x86_64.rpm 
+
+cd nagios-nrpe-2.14-1.el6.rf.x86_64
+./configure
+make all
+
+make install-plugin
+make install-daemon
+make install-daemon-config
+
+make install-xinetd
+
+echo "only_from 127.0.0.1 localhost $NAGIOSSERVER" >> /etc/xinetd.d/nrpe
